@@ -6,7 +6,7 @@
 
 [0]: https://developer.android.google.cn/ndk/guides
 [1]: https://github.com/HelloHuDi/NDK_Learn/tree/master/First_Learn
-[1]: https://github.com/HelloHuDi/NDK_Learn/tree/master/Second_Learn
+[2]: https://github.com/HelloHuDi/NDK_Learn/tree/master/Second_Learn
 
 
 
