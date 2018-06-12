@@ -9,4 +9,9 @@ public class FirstNdkClass {
     }
 
     public native String getCLanguageString();
+
+    public native int addAandB(int a,int b);
+
+    public native float mulAandB(float a,float b);
+
 }

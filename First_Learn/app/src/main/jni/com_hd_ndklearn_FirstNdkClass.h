@@ -15,6 +15,22 @@ extern "C" {
 JNIEXPORT jstring JNICALL Java_com_hd_ndklearn_FirstNdkClass_getCLanguageString
   (JNIEnv *, jobject);
 
+/*
+ * Class:     com_hd_ndklearn_FirstNdkClass
+ * Method:    addAandB
+ * Signature: (II)I
+ */
+JNIEXPORT jint JNICALL Java_com_hd_ndklearn_FirstNdkClass_addAandB
+  (JNIEnv *, jobject, jint, jint);
+
+/*
+ * Class:     com_hd_ndklearn_FirstNdkClass
+ * Method:    mulAandB
+ * Signature: (FF)F
+ */
+JNIEXPORT jfloat JNICALL Java_com_hd_ndklearn_FirstNdkClass_mulAandB
+  (JNIEnv *, jobject, jfloat, jfloat);
+
 #ifdef __cplusplus
 }
 #endif
