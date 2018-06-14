@@ -1,15 +1,15 @@
-## 编译环境环境
+#### 编译环境
 
 ```
 Mac : macOS High Sierra 10.13.4
-FFmpeg : 4.0
-NDK : android-ndk-r14b
+FFmpeg : 3.3.7
+NDK : android-ndk-r10d
 ```
 
-## [下载FFmpeg][0],网上提到可以用brew指令下载，如果只是需要编译出so，可以直接从官网下载
+#### [下载FFmpeg][0],网上提到可以用brew指令下载，如果只是需要编译出so，可以直接从官网下载
 [0]: https://www.ffmpeg.org/
 
-## 修改配置,这是一波基本操作，目的将编译出来的库后缀 .so.xx 改成 .xx.so
+#### 修改配置,这是一波基本操作，目的将编译出来的库后缀 .so.xx 改成 .xx.so
 
 ```
 # 将 configure 文件中的：
@@ -25,10 +25,13 @@ SLIB_INSTALL_NAME='$(SLIBNAME_WITH_MAJOR)'
 SLIB_INSTALL_LINKS='$(SLIBNAME)'
 ```
 
-## 编译脚本 android_build.sh，将该脚本放在FFmpeg目录下即可
-### 注意：脚本的目的是对FFmpeg功能进行裁剪，去除不需要的功能来缩减so大小（编译完整so库大小可达到60M+），因此**脚本内容并不是固定不变的**,可以根据实际情况调整或添加相应的部分
-### **懵逼点：因为每个人的编译环境及版本各有差异，当你发现使用某个脚本无法编译出东西或者出现N种迷之问题的时候，不要放弃，可使用其他脚本尝试**
-### 以下脚本内容为编译出可操作mp4转换gif的so
+#### 编译脚本 android_build.sh，将该脚本放在FFmpeg目录下即可
+
+注意：脚本的目的是对FFmpeg功能进行裁剪，去除不需要的功能来缩减so大小（编译完整so库大小可达到60M+），因此**脚本内容并不是固定不变的**,可以根据实际情况调整或添加相应的部分
+
+**懵逼点：因为每个人的编译环境及版本各有差异，当你发现使用某个脚本无法编译出东西或者出现N种迷之问题的时候，不要放弃，可使用其他脚本尝试**
+
+以下脚本内容为编译出可操作mp4转换gif的so
 
 ```
 #!/bin/bash
@@ -44,9 +47,6 @@ function build_one
 --cross-prefix=$TOOLCHAIN/bin/arm-linux-androideabi- \
 --arch=arm \
 --sysroot=$PLATFORM \
---extra-cflags="-I$PLATFORM/usr/include" \
---cc=$TOOLCHAIN/bin/arm-linux-androideabi-gcc \
---nm=$TOOLCHAIN/bin/arm-linux-androideabi-nm \
 --enable-shared \
 --disable-static \
 --disable-doc \
@@ -72,21 +72,17 @@ function build_one
 --enable-parser=mjpeg       \
 --enable-parser=mpegvideo   \
 --enable-parser=h264    \
---extra-cflags="-I$ASM -isysroot $ISYSROOT -Os -fpic -marm" \
 --extra-ldflags="-marm" \
+--extra-cflags="-Os -fpic" \
 $ADDITIONAL_CONFIGURE_FLAG
     make clean
-    make j8
+    make -j4
     make install
 }
-# arm v7vfp
-CPU=arm
-OPTIMIZE_CFLAGS="-mfloat-abi=softfp -mfpu=vfp -marm -march=$CPU "
-ADDI_CFLAGS="-marm"
 build_one
 ```
 
-### 部分参数解释
+#### 部分参数解释
 
 ```
 ––enable-cross-compile 允许交叉编译，默认不允许
@@ -111,7 +107,7 @@ build_one
 ––enable-parser=NAME 开放指定的解解析器, 可以有多个
 ```
 
-## 执行脚本,终端依次输入如下指令
+#### 执行脚本,终端依次输入如下指令
 
 ```
 cd FFmpeg目录
@@ -121,4 +117,4 @@ chmod 777 android_build.sh
 ./android_build.sh
 ```
 
-## 经过一段**迷之编译**，最终在指定目录android_new_build下可以查看到结果，至此Mac下FFmpeg so文件已经编译出来了，个中辛酸，无奈，懵逼，可自行体会
+经过一段时间的**迷之编译**，最终在指定目录android_new_build下可以查看到结果，至此Mac下FFmpeg so文件已经编译出来了，个中辛酸，无奈，懵逼，可自行体会

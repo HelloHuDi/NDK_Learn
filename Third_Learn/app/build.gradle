@@ -4,14 +4,20 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.hd.third_learn"
-        minSdkVersion 14
-        targetSdkVersion 27
+        minSdkVersion 21
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk{
+            abiFilters 'armeabi-v7a'
+        }
         externalNativeBuild {
             cmake {
                 cppFlags ""
+                abiFilters 'armeabi-v7a'
+//                arguments '-DANDROID_PLATFORM=android-21',
+//                        '-DANDROID_TOOLCHAIN=gcc', '-DANDROID_STL=gnustl_static'
             }
         }
     }
@@ -23,7 +29,7 @@ android {
     }
     externalNativeBuild {
         cmake {
-            path "CMakeLists.txt"
+            path "src/main/fjni/CMakeLists.txt"
         }
     }
 }
