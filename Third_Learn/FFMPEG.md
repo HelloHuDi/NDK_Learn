@@ -35,49 +35,54 @@ SLIB_INSTALL_LINKS='$(SLIBNAME)'
 
 ```
 #!/bin/bash
-PLATFORM=/Users/hd/Library/Android/android-ndk-r14b/platforms/android-14/arch-arm/
-TOOLCHAIN=/Users/hd/Library/Android/android-ndk-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64
-PREFIX=./android_new_build
+make clean
+export NDK=/Users/hd/Library/Android/android-ndk-r10d
+export SYSROOT=$NDK/platforms/android-21/arch-arm/
+export ARM_LINUX_ANDROIDEABI_VERSION=4.9
+export TOOLCHAIN=$NDK/toolchains/arm-linux-androideabi-$ARM_LINUX_ANDROIDEABI_VERSION/prebuilt/darwin-x86_64
+export CPU=arm
+export PREFIX=./android/$CPU
+export ADDI_CFLAGS="-marm"
 function build_one
 {
 ./configure \
 --prefix=$PREFIX \
---target-os=android \
---enable-cross-compile \
+--target-os=linux \
 --cross-prefix=$TOOLCHAIN/bin/arm-linux-androideabi- \
 --arch=arm \
---sysroot=$PLATFORM \
+--sysroot=$SYSROOT \
+--extra-cflags="-Os -fpic $ADDI_CFLAGS" \
+--extra-ldflags="$ADDI_LDFLAGS" \
+--enable-cross-compile \
 --enable-shared \
 --disable-static \
 --disable-doc \
---disable-programs \
---disable-encoders  \
---enable-encoder=mjpeg \
---enable-encoder=gif  \
+--disable-programs   \
+--disable-encoders      \
+--enable-encoder=mjpeg  \
+--enable-encoder=gif    \
 --disable-decoders   \
 --enable-decoder=mjpeg \
 --enable-decoder=h264 \
---enable-decoder=mpeg4  \
---disable-muxers  \
+--enable-decoder=mpeg4 \
+--disable-muxers    \
 --enable-muxer=gif  \
---enable-muxer=mjpeg     \
---enable-muxer=image2     \
---disable-demuxers           \
+--enable-muxer=mjpeg   \
+--enable-muxer=image2   \
+--disable-demuxers   \
 --enable-demuxer=mpegvideo   \
 --enable-demuxer=image2   \
 --enable-demuxer=mjpeg   \
 --enable-demuxer=h264   \
 --enable-demuxer=mov    \
---disable-parsers        \
---enable-parser=mjpeg       \
+--disable-parsers    \
+--enable-parser=mjpeg   \
 --enable-parser=mpegvideo   \
 --enable-parser=h264    \
---extra-ldflags="-marm" \
---extra-cflags="-Os -fpic" \
 $ADDITIONAL_CONFIGURE_FLAG
-    make clean
-    make -j4
-    make install
+make clean
+make -j4
+make install
 }
 build_one
 ```
